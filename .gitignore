@@ -1,0 +1,11 @@
+# Build binaries and objects
+bin/
+*.exe
+*.o
+*.obj
+
+# Test and scratch data
+data/test_history.json
+*.tmp
+.vscode/
+.idea/

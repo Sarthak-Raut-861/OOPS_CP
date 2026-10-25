@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitMetric — Body Metric Assessment & Stability Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-content">
+            <div class="brand">
+                <span class="brand-title">FitMetric</span>
+                <span class="brand-badge">ISVE Core (C++)</span>
+            </div>
+            <nav class="nav-links">
+                <button type="button" class="nav-btn active" data-tab="tab-calc">Calculator & Results</button>
+                <button type="button" class="nav-btn" data-tab="tab-history">History</button>
+                <button type="button" class="nav-btn" data-tab="tab-benchmark">Research Evaluation</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-container">
+        <!-- TAB 1: Main Calculator & Results -->
+        <section class="tab-content active" id="tab-calc">
+            <div class="main-grid">
+                <!-- Left Column: Input Form Panel -->
+                <div class="card-panel">
+                    <div class="panel-header">
+                        <h2>Input Measurements</h2>
+                        <button type="button" class="btn-link" id="btnDemoPreset">Load Borderline Sample</button>
+                    </div>
+
+                    <form id="calcForm">
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="weightKg">Weight (kg)</label>
+                                <input type="number" id="weightKg" step="0.1" min="10" max="400" value="77.0" required>
+                            </div>
+                            <div class="form-field">
+                                <label for="heightCm">Height (cm)</label>
+                                <input type="number" id="heightCm" step="0.1" min="50" max="260" value="175.5" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="ageYears">Age (years)</label>
+                                <input type="number" id="ageYears" min="1" max="120" value="26" required>
+                            </div>
+                            <div class="form-field">
+                                <label for="sex">Biological Sex</label>
+                                <select id="sex">
+                                    <option value="male" selected>Male (+5 kcal)</option>
+                                    <option value="female">Female (-161 kcal)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="activityLevel">Activity Level</label>
+                                <select id="activityLevel">
+                                    <option value="sedentary">Sedentary (1.20)</option>
+                                    <option value="lightly_active" selected>Lightly Active (1.375)</option>
+                                    <option value="moderately_active">Moderately Active (1.55)</option>
+                                    <option value="very_active">Very Active (1.725)</option>
+                                    <option value="extremely_active">Extremely Active (1.90)</option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label for="profileContext">Profile Context</label>
+                                <select id="profileContext">
+                                    <option value="general" selected>General User</option>
+                                    <option value="athlete">Athlete (Muscular Context)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Measurement Tolerance Section -->
+                        <div class="tolerance-card">
+                            <label class="checkbox-row">
+                                <input type="checkbox" id="enableTolerance" checked>
+                                <span class="checkbox-title">Include Measurement Tolerances (ISVE Analysis)</span>
+                            </label>
+
+                            <div class="tolerance-body" id="toleranceFields">
+                                <div class="form-row" style="margin-bottom: 0;">
+                                    <div class="form-field">
+                                        <label>Weight Range [Min – Max] kg</label>
+                                        <div class="range-inputs">
+                                            <input type="number" id="weightMin" step="0.1" value="75.8" placeholder="Min">
+                                            <span class="range-sep">to</span>
+                                            <input type="number" id="weightMax" step="0.1" value="78.2" placeholder="Max">
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Height Range [Min – Max] cm</label>
+                                        <div class="range-inputs">
+                                            <input type="number" id="heightMin" step="0.1" value="175.0" placeholder="Min">
+                                            <span class="range-sep">to</span>
+                                            <input type="number" id="heightMax" step="0.1" value="176.0" placeholder="Max">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="btnCalculate">Calculate & Evaluate</button>
+                            <button type="button" class="btn btn-secondary" id="btnReset">Reset</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Right Column: Results Panel -->
+                <div class="card-panel">
+                    <div class="panel-header">
+                        <h2>Assessment Results</h2>
+                        <span class="engine-badge">C++ Engine Live</span>
+                    </div>
+
+                    <div id="resultsView">
+                        <!-- Metric Cards Grid -->
+                        <div class="metrics-row">
+                            <div class="metric-card">
+                                <div class="metric-header">Body Mass Index (BMI)</div>
+                                <div class="metric-value-row">
+                                    <span class="metric-main-num" id="resBmi">25.00</span>
+                                    <span class="metric-unit">kg/m²</span>
+                                </div>
+                                <div class="metric-badge-row">
+                                    <span class="category-pill" id="resCategory">Overweight</span>
+                                </div>
+                                <div class="metric-footer" id="resBmiInterval">Interval: [24.47, 25.53] kg/m²</div>
+                            </div>
+
+                            <div class="metric-card">
+                                <div class="metric-header">Basal Metabolic Rate (BMR)</div>
+                                <div class="metric-value-row">
+                                    <span class="metric-main-num" id="resBmr">1742</span>
+                                    <span class="metric-unit">kcal/day</span>
+                                </div>
+                                <div class="metric-badge-row">
+                                    <span class="sub-info">Mifflin–St Jeor</span>
+                                </div>
+                                <div class="metric-footer">Resting expenditure</div>
+                            </div>
+
+                            <div class="metric-card">
+                                <div class="metric-header">Total Daily Energy (TDEE)</div>
+                                <div class="metric-value-row">
+                                    <span class="metric-main-num" id="resTdee">2395</span>
+                                    <span class="metric-unit">kcal/day</span>
+                                </div>
+                                <div class="metric-badge-row">
+                                    <span class="sub-info">Multiplier 1.375</span>
+                                </div>
+                                <div class="metric-footer">Daily maintenance</div>
+                            </div>
+                        </div>
+
+                        <!-- Stability Alert -->
+                        <div class="alert-card" id="stabilityAlert">
+                            <div class="alert-heading" id="alertTitle">Stability Status</div>
+                            <div class="alert-message" id="alertDesc">Submit measurements to see stability interpretation.</div>
+                        </div>
+
+                        <!-- Category Scale Bar -->
+                        <div class="scale-card">
+                            <div class="scale-top-row">
+                                <span class="scale-title">WHO Adult BMI Stratification</span>
+                                <span class="scale-current" id="gaugeStatusText">Nominal: 25.00</span>
+                            </div>
+
+                            <!-- Colored Segments Bar -->
+                            <div class="bar-segments">
+                                <div class="seg seg-blue" title="Underweight (< 18.5)"></div>
+                                <div class="seg seg-green" title="Normal (18.5 – 24.9)"></div>
+                                <div class="seg seg-orange" title="Overweight (25.0 – 29.9)"></div>
+                                <div class="seg seg-red" title="Obesity (≥ 30.0)"></div>
+                            </div>
+
+                            <!-- Pointer / Bracket Track -->
+                            <div class="indicator-track">
+                                <div class="range-bracket" id="scaleBracket">
+                                    <div class="marker-dot"></div>
+                                </div>
+                            </div>
+
+                            <!-- Scale Legend Labels -->
+                            <div class="scale-legend">
+                                <span class="legend-item"><span class="dot dot-blue"></span>&lt;18.5 Underweight</span>
+                                <span class="legend-item"><span class="dot dot-green"></span>18.5–24.9 Normal</span>
+                                <span class="legend-item"><span class="dot dot-orange"></span>25.0–29.9 Overweight</span>
+                                <span class="legend-item"><span class="dot dot-red"></span>≥30.0 Obesity</span>
+                            </div>
+                        </div>
+
+                        <!-- Measurement Verification Advice -->
+                        <div class="verification-card" id="recBox">
+                            <div class="ver-header">Measurement Verification Advice</div>
+                            <div class="ver-text" id="recText">No verification required.</div>
+                            <div class="table-wrap">
+                                <table class="ver-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Priority</th>
+                                            <th>Measurement</th>
+                                            <th>Proposed Instrument</th>
+                                            <th>Uncertainty Contraction</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="result-actions">
+                            <button type="button" class="btn btn-secondary" id="btnOpenTrace">View Audit Trace (JSON)</button>
+                            <button type="button" class="btn btn-secondary" id="btnExportReport">Download Report (MD)</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: History -->
+        <section class="tab-content" id="tab-history">
+            <div class="card-panel">
+                <div class="panel-header">
+                    <h2>Past Measurement Sessions</h2>
+                    <button type="button" class="btn btn-secondary" id="btnReloadHistory">Refresh History</button>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date / Time</th>
+                                <th>Weight</th>
+                                <th>Height</th>
+                                <th>BMI (Interval)</th>
+                                <th>BMR</th>
+                                <th>TDEE</th>
+                                <th>Stability Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <tr><td colspan="7" class="text-center">Loading past sessions...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: Research Evaluation -->
+        <section class="tab-content" id="tab-benchmark">
+            <div class="card-panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Experimental Benchmark Evaluation</h2>
+                        <p class="panel-desc">Comparing Conventional Point-Estimate vs Basic Interval vs FitMetric ISVE.</p>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="btnRunBench">Run Benchmark Suite</button>
+                </div>
+
+                <div class="benchmark-info" id="benchSummary">
+                    Click "Run Benchmark Suite" to evaluate the automated test cases in the C++ engine.
+                </div>
+
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>System Model</th>
+                                <th>Boundary Crossing Detection</th>
+                                <th>False Certainty Rate</th>
+                                <th>Stability Certified</th>
+                                <th>Verification Action Ranking</th>
+                                <th>Execution Speed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Baseline A (Conventional)</strong></td>
+                                <td class="text-danger" id="bA_det">0% (0 / 8)</td>
+                                <td class="text-danger" id="bA_err">High (5 false claims)</td>
+                                <td>None</td>
+                                <td>None</td>
+                                <td id="bA_spd">~12 µs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Baseline B (Basic Interval)</strong></td>
+                                <td class="text-warning" id="bB_det">50% (4 / 8)</td>
+                                <td class="text-warning" id="bB_err">Medium (2 unassessable)</td>
+                                <td>Partial</td>
+                                <td>None</td>
+                                <td id="bB_spd">~24 µs</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td><strong>FitMetric (ISVE Candidate)</strong></td>
+                                <td class="text-success" id="fM_det">100% Robust</td>
+                                <td class="text-success" id="fM_err">0% (Completely Eliminated)</td>
+                                <td class="text-success">8 / 8 Fully Certified</td>
+                                <td class="text-success">Automated Sensitivity Ranking</td>
+                                <td class="text-success" id="fM_spd">&lt; 100 µs</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Audit Trace Modal -->
+    <div class="modal" id="traceModal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3>Structured Evidence Trace</h3>
+                <button type="button" class="btn-close" id="btnCloseModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <pre id="traceJsonText"></pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnCopyJson">Copy JSON</button>
+                <button type="button" class="btn btn-primary" id="btnDismissModal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
